@@ -41,11 +41,10 @@ const SignUp = () => {
                 }
             });
             const statusCode = res.status;
-            if (statusCode === 409) {
-                alert('Email Already Present!');
-                return false;
-            } else if (statusCode === 200) return true
-            else return false;
+            const data = res.json();
+            alert(data.message);
+            if (statusCode !== 201) return false
+            else return true
         }
         const res = await addUser();
         if (res) {
