@@ -1,10 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { authActions } from '../store/authSlice';
 
 const LogIn = () => {
     const [inputWidth, setInputWidth] = useState(0);
 
     const emailRef = useRef();
     const passwordRef = useRef();
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         function handleResize() {
@@ -49,13 +53,14 @@ const LogIn = () => {
     if (res) {
         emailRef.current.value = '';
         passwordRef.current.value = '';
+        dispatch(authActions.setTrue());
     }
 };
 
 return (
     <React.Fragment>
         <div className="md:text-3xl text-1xl text-center md:p-6 md:my-14 p-3 my-7 border-red-800 border-2 md:w-[40%] w-[70%] mx-auto bg-red-600">
-            <h2>SignUp</h2>
+            <h2>Login</h2>
             <br />
             <form className='mx-auto' id="myForm" onSubmit={submitHandler}>
                 <table className='w-full'>
@@ -65,7 +70,7 @@ return (
                                 <label htmlFor="email" style={{ width: inputWidth }}>Email: </label>
                             </td>
                             <td className='text-left'>
-                                <input type="email" id="email" className='border-2 border-blue-400 rounded bg-indigo-200 p-1' style={{ width: inputWidth }} ref={emailRef} />
+                                <input type="email" id="email" className='border-2 border-blue-400 rounded bg-indigo-200 p-1' style={{ width: inputWidth }} ref={emailRef} required />
                             </td>
                         </tr>
                         <br />
@@ -74,7 +79,7 @@ return (
                                 <label htmlFor="password" style={{ width: inputWidth }}>Password: </label>
                             </td>
                             <td className='text-left'>
-                                <input type="password" id="password" className='border-2 border-blue-400 rounded bg-indigo-200 p-1' style={{ width: inputWidth }} ref={passwordRef} />
+                                <input type="password" id="password" className='border-2 border-blue-400 rounded bg-indigo-200 p-1' style={{ width: inputWidth }} ref={passwordRef} required />
                             </td>
                         </tr>
                         <br />
