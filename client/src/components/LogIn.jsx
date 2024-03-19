@@ -47,19 +47,24 @@ const LogIn = () => {
             const data = await res.json();
             alert(data.message);
             if (statusCode !== 200) return false
-            else return true
+            else {
+                localStorage.setItem("token", data.token);
+                console.log("token updated!")
+                return true
+            }
         }
     const res = await loginUser();
     if (res) {
         emailRef.current.value = '';
         passwordRef.current.value = '';
         dispatch(authActions.setTrue());
+        localStorage.setItem("auth", true);
     }
 };
 
 return (
     <React.Fragment>
-        <div className="md:text-3xl text-1xl text-center md:p-6 md:my-14 p-3 my-7 border-red-800 border-2 md:w-[40%] w-[70%] mx-auto bg-red-600">
+        <div className="md:text-3xl text-1xl text-center md:p-6 md:my-14 p-3 my-7 border-red-800 border-2 md:w-[40%] w-[70%] mx-auto bg-red-600 rounded-lg">
             <h2>Login</h2>
             <br />
             <form className='mx-auto' id="myForm" onSubmit={submitHandler}>

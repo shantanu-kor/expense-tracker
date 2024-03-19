@@ -8,6 +8,12 @@ const expenseSlice = createSlice({
     reducers: {
         addExpense(state, action) {
             state.expenses = [...state.expenses, action.payload]
+        },
+        removeExpense(state, action) {
+            state.expenses = state.expenses.filter(item => item.id !== action.payload);
+        },
+        renewExpense(state) {
+            state.expenses = [];
         }
     }
 })

@@ -1,6 +1,12 @@
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const User = require('../models/user');
+
+function generateAccessToken(id, name) {
+    return jwt.sign({userId: id, name: name}, process.env.JWT_PASSWORD)
+}
 
 exports.addUser = async (req, res, next) => {
     const { name, email, password } = req.body;
@@ -16,10 +22,11 @@ exports.addUser = async (req, res, next) => {
         try {
             const exists = await findUser();
             if (!exists) {
-                await User.create({ name, email: email.toLowerCase(), password: hash });
+                const user = await User.create({ name, email: email.toLowerCase(), password: hash });
                 res.status(201).json({
                     success: true,
-                    message: 'USER_CREATED_SUCCESSFULLY'
+                    message: 'USER_CREATED_SUCCESSFULLY',
+                    token: generateAccessToken(user.dataValues.id, user.dataValues.name)
                 })
             } else {
                 res.status(409).json({
@@ -58,7 +65,8 @@ exports.loginUser = async (req, res, next) => {
                 if(result === true) {
                     res.json({
                         success: true,
-                        message: "User login successful"
+                        message: "User login successful",
+                        token: generateAccessToken(exists.dataValues.id, exists.dataValues.name)
                     })
                 } else {
                     res.status(401).json({

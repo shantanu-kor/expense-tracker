@@ -1,14 +1,20 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import AuthPage from './pages/AuthPage';
-import { useSelector } from 'react-redux';
 import ExpensePage from './pages/ExpensePage';
 
-
+import { authActions } from './store/authSlice';
 
 function App() {
   const auth = useSelector(state => state.auth.auth);
+  const dispatch = useDispatch();
+  if (localStorage.getItem("auth") === "true") {
+    dispatch(authActions.setTrue());
+  }
   return (
     <React.Fragment>
+      <h1 className='md:text-4xl text-2xl text-center border-2 border-black bg-violet-900 md:p-5 p-3 text-white'>Daily Expense Tracker</h1>
       {auth ? <ExpensePage /> : <AuthPage />}
     </React.Fragment>
   )

@@ -18,12 +18,16 @@ const AddExpense = () => {
             method: "POST",
             body: JSON.stringify({ amount, description, category }),
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'Authorization': localStorage.getItem('token')
             }
         })
         data = await data.json();
         if (data.success) {
             dispatch(expenseActions.addExpense(data.data));
+            amountRef.current.value = '';
+            descriptionRef.current.value = '';
+            categoryRef.current.value = 'Fuel';
         } else {
             alert(data.message);
         }
