@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux';
 import { expenseActions } from '../store/expenseSlice';
 
@@ -8,6 +8,55 @@ const AddExpense = () => {
     const categoryRef = useRef();
 
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        const script = document.createElement("script");
+
+        script.src = "https://checkout.razorpay.com/v1/checkout.js";
+        script.async = true;
+
+        document.body.appendChild(script);
+
+        return () => {
+            document.body.removeChild(script);
+        }
+    }, []);
+
+    const premiumHandler = async (event) => {
+        event.preventDefault();
+        const token = localStorage.getItem("token");
+        const response = await fetch('http://localhost:3000/purchase/premium-membership', {
+            headers: {
+                "Authorization": token
+            }
+        })
+        const data = await response.json();
+        let options = {
+            "key": data.key_id,
+            "order_id": data.order.id,
+            "handler": async function (response) {
+                await fetch('http://localhost:3000/purchase/update-transaction-status', {
+                    method: "POST",
+                    body: JSON.stringify({
+                        order_id: options.order_id,
+                        payment_id: response.razorpay_payment_id
+                    }),
+                    headers: {
+                        "Authorization": token
+                    }
+                });
+                alert("You are a Premium User now!");
+            }
+        };
+        const rzp1 = new Razorpay(options);
+        rzp1.open();
+
+        rzp1.on('payment.failed', function (response) {
+            console.log(response);
+            alert('Something went wrong');
+        })
+
+    };
 
     const submitHandler = async (event) => {
         event.preventDefault();
@@ -58,6 +107,8 @@ const AddExpense = () => {
             </div>
             <br />
             <button type="submit" className="border-2 md:p-2 p-1 border-blue-500 rounded-lg hover:bg-blue-600 bg-white">Add Expense</button>
+            <br />
+            <button id="rzp-button1" className="border-2 md:p-2 p-1 border-red-500 rounded-lg hover:bg-red-600 bg-white m-4" onClick={premiumHandler}>Buy Premium</button>
         </form>
     )
 }
