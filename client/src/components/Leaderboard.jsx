@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 const Leaderboard = () => {
     const [showLeaderboard, setShowLeaderboard] = useState(false);
@@ -14,10 +14,10 @@ const Leaderboard = () => {
         const data = await response.json();
         if (data.success) {
             setLeaderboard(data.data);
+            setShowLeaderboard(true);
         } else {
             alert(data.message);
         }
-        setShowLeaderboard(true);
     };
 
     const refreshHandler = async (event) => {
@@ -43,7 +43,7 @@ const Leaderboard = () => {
                     <div className='md:text-2xl text-1xl text-center'>
                         <button onClick={refreshHandler} className="border-2 md:p-2 p-1 md:m-4 m-2 border-red-500 rounded-lg hover:bg-red-600 bg-white">Refresh Leaderboard</button>
                     </div>
-                    <table className="mx-auto md:text-2xl text-1xl border-collapse table-fixed">
+                    <table className="mx-auto md:text-2xl text-1xl border-collapse table-fixed md:my-4 my-2">
                         <thead>
                             <tr>
                                 <th className="border-black border">Name</th>
