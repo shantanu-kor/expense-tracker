@@ -48,3 +48,22 @@ exports.updateTransactionStatus = async (req, res, next) => {
         });
     }
 }
+
+exports.paymentFailed = async (req, res, next) => {
+    try {
+        const { order_id } = req.body;
+        // console.log(req.body);
+        const order = await Order.findOne({ where: { orderId: order_id } });
+        await order.update({ status: 'FAILED' });
+        res.json({
+            success: true,
+            message: "Payment failed"
+        })
+    } catch (err) {
+        console.log(err);
+        res.status(403).json({
+            message: "Something went wrong",
+            error: err
+        });
+    }
+};

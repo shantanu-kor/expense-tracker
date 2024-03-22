@@ -82,5 +82,18 @@ exports.loginUser = async (req, res, next) => {
             message: err
         });
     }
-
 };
+
+exports.isPremium = (req, res, next) => {
+    if (req.user.dataValues.isPremiumUser) {
+        res.json({
+            success: true,
+            message: "User is a premium user"
+        })
+    } else {
+        res.json({
+            success: false,
+            message: "User is not a premium user"
+        })
+    }
+}

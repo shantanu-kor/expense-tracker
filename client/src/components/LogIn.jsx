@@ -49,7 +49,6 @@ const LogIn = () => {
             if (statusCode !== 200) return false
             else {
                 localStorage.setItem("token", data.token);
-                console.log("token updated!")
                 return true
             }
         }

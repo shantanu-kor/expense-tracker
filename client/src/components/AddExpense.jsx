@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { expenseActions } from '../store/expenseSlice';
+import { premiumActions } from '../store/premiumSlice';
 
 const AddExpense = () => {
     const amountRef = useRef();
@@ -8,6 +9,7 @@ const AddExpense = () => {
     const categoryRef = useRef();
 
     const dispatch = useDispatch();
+    const premium = useSelector(state => state.premium.premium);
 
     useEffect(() => {
         const script = document.createElement("script");
@@ -42,20 +44,31 @@ const AddExpense = () => {
                         payment_id: response.razorpay_payment_id
                     }),
                     headers: {
-                        "Authorization": token
+                        "Authorization": token,
+                        "Content-Type": "application/json"
                     }
                 });
                 alert("You are a Premium User now!");
+                dispatch(premiumActions.setTrue());
             }
         };
         const rzp1 = new Razorpay(options);
         rzp1.open();
 
-        rzp1.on('payment.failed', function (response) {
+        rzp1.on('payment.failed', async function (response) {
             console.log(response);
+            await fetch('http://localhost:3000/purchase/payment-failed', {
+                method: "POST",
+                body: JSON.stringify({
+                    order_id: data.order.id
+                }),
+                headers: {
+                    "Authorization": token,
+                    "Content-Type": "application/json"
+                }
+            })
             alert('Something went wrong');
         })
-
     };
 
     const submitHandler = async (event) => {
@@ -108,7 +121,9 @@ const AddExpense = () => {
             <br />
             <button type="submit" className="border-2 md:p-2 p-1 border-blue-500 rounded-lg hover:bg-blue-600 bg-white">Add Expense</button>
             <br />
-            <button id="rzp-button1" className="border-2 md:p-2 p-1 border-red-500 rounded-lg hover:bg-red-600 bg-white m-4" onClick={premiumHandler}>Buy Premium</button>
+            {!premium &&
+                <button id="rzp-button1" className="border-2 md:p-2 p-1 border-red-500 rounded-lg hover:bg-red-600 bg-white m-4" onClick={premiumHandler}>Buy Premium</button>
+            }
         </form>
     )
 }

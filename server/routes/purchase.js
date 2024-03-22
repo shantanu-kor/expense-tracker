@@ -10,4 +10,6 @@ router.get('/premium-membership', authenticationMiddleware.authenticate, purchas
 
 router.post('/update-transaction-status', authenticationMiddleware.authenticate, purchaseController.updateTransactionStatus);
 
+router.post('/payment-failed', authenticationMiddleware.authenticate, purchaseController.paymentFailed);
+
 module.exports = router;
