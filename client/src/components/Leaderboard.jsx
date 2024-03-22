@@ -54,7 +54,7 @@ const Leaderboard = () => {
                             {leaderboard.map(item => (
                                 <tr>
                                     <td className="border-black border text-center">{item.name}</td>
-                                    <td className="border-black border text-center">{item.totalAmount}</td>
+                                    <td className="border-black border text-center">{item.totalExpense}</td>
                                 </tr>
                             ))}
                         </tbody>

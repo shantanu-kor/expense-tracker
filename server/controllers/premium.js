@@ -16,16 +16,21 @@ exports.getLeaderboard = async (req, res, next) => {
         //     arr.push({ name, totalAmount: expenses[0].totalAmount });
         // }
         // arr.sort((a, b) => b.totalAmount - a.totalAmount);
+        
+        // const arr = await User.findAll({
+        //     attributes: ['name', [sequelize.fn('sum', sequelize.col('expenses.amount')), 'totalAmount']],
+        //     include: [
+        //         {
+        //             model: Expense,
+        //             attributes: []
+        //         }
+        //     ],
+        //     group: ['user.id'],
+        //     order: [['totalAmount', 'DESC']]
+        // })
         const arr = await User.findAll({
-            attributes: ['name', [sequelize.fn('sum', sequelize.col('expenses.amount')), 'totalAmount']],
-            include: [
-                {
-                    model: Expense,
-                    attributes: []
-                }
-            ],
-            group: ['user.id'],
-            order: [['totalAmount', 'DESC']]
+            attributes: ['name', 'totalExpense'],
+            order: [['totalExpense', 'DESC']]
         })
         res.json({
             success: true,
