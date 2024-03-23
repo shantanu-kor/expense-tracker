@@ -12,7 +12,7 @@ const AuthPage = () => {
   return (
     <React.Fragment>
       {login ? <LogIn /> : <SignUp />}
-      <div className='text-center text-2xl'>
+      <div className='text-center md:text-2xl text-1xl'>
         <button onClick={toggleLogin} className="border-2 md:p-2 p-1 border-red-500 rounded-lg hover:bg-red-600 bg-white">{login ? "New user? Signup" : "Already a user? Login"}</button>
       </div>
     </React.Fragment>
