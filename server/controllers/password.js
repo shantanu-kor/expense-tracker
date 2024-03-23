@@ -105,9 +105,13 @@ exports.saveSentPassword = async (req, res, next) => {
             if (hash) {
                 user.password = hash;
                 await user.save({ transaction });
+                await transaction.commit();
+                res.json({
+                    success: true,
+                    message: "Password changed"
+                })
             }
         })
-        await transaction.commit();
     } catch (err) {
         console.log(err);
         transaction.rollback();
