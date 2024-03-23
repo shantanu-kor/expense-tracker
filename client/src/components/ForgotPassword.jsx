@@ -5,7 +5,7 @@ const ForgotPassword = () => {
 
     const submitHandler = async (event) => {
         event.preventDefault();
-        await fetch('http://localhost:3000/password/forgot-password', {
+        const res = await fetch('http://localhost:3000/password/forgot-password', {
             method: "POST",
             body: JSON.stringify({
                 emailId: emailRef.current.value
@@ -15,7 +15,12 @@ const ForgotPassword = () => {
                 "Authorization": localStorage.getItem("token")
             }
         })
-        emailRef.current.value = '';
+        const data = res.json();
+        if (!data.success) {
+            alert(data.message);
+        } else {
+            emailRef.current.value = '';
+        }
     }
     return (
         <form className="md:text-2xl text-1xl text-center rounded-lg p-4" onSubmit={submitHandler}>
