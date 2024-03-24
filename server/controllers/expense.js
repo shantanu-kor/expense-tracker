@@ -4,9 +4,9 @@ const sequelize = require('../util/database');
 exports.addExpense = async (req, res, next) => {
     const transaction = await sequelize.transaction();
 
-    const { amount, description, category } = req.body;
+    const { amount, description, category, date } = req.body;
     try {
-        const expense = await req.user.createExpense({ amount, description, category }, { transaction });
+        const expense = await req.user.createExpense({ amount, description, category, date }, { transaction });
         req.user.totalExpense += Number(amount);
         await req.user.save({ transaction });
         await transaction.commit();
@@ -19,7 +19,7 @@ exports.addExpense = async (req, res, next) => {
         await transaction.rollback();
         res.status(500).json({
             success: false,
-            message: err
+            message: err.message
         });
     }
 };
@@ -35,7 +35,7 @@ exports.getExpenses = async (req, res, next) => {
     } catch (err) {
         res.status(500).json({
             success: false,
-            message: err
+            message: err.message
         })
     }
 };
@@ -59,7 +59,7 @@ exports.deleteExpense = async (req, res, next) => {
         transaction.rollback();
         res.status(500).json({
             success: false,
-            message: err
+            message: err.message
         })
     }
 };

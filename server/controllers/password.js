@@ -57,7 +57,7 @@ exports.forgotPassword = async (req, res, next) => {
         await transaction.rollback();
         res.status(500).json({
             success: false,
-            message: err
+            message: err.message
         })
     }
 };
@@ -77,7 +77,7 @@ exports.resetPassword = async (req, res, next) => {
         console.log(err);
         res.status(401).json({
             success: false,
-            message: err
+            message: err.message
         })
     }
 }
@@ -117,7 +117,7 @@ exports.saveSentPassword = async (req, res, next) => {
         transaction.rollback();
         res.status(401).json({
             success: false,
-            message: err
+            message: err.message
         })
     }
 }

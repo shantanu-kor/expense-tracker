@@ -22,6 +22,7 @@ const ExpenseList = () => {
         <table className="mx-auto my-4 md:text-2xl text-1xl text-center border-collapse table-fixed">
             <thead>
                 <tr>
+                    <th className="border-black border">Date</th>
                     <th className="border-black border">Amount</th>
                     <th className="border-black border">Description</th>
                     <th className="border-black border">Category</th>
@@ -29,6 +30,7 @@ const ExpenseList = () => {
             </thead>
             {expenses.map(item => (<tbody>
                 <tr>
+                    <td className="border-black border">{item.date}</td>
                     <td className="border-black border">{item.amount}</td>
                     <td className="border-black border">{item.description}</td>
                     <td className="border-black border">{item.category}</td>

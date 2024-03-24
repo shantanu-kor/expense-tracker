@@ -8,6 +8,8 @@ import Leaderboard from '../components/Leaderboard';
 import { authActions } from '../store/authSlice';
 import { expenseActions } from '../store/expenseSlice';
 import { premiumActions } from '../store/premiumSlice';
+import DownloadCSV from '../components/DownloadCSV';
+import ExpenseReport from '../components/ExpenseReport';
 
 const ExpensePage = () => {
   const dispatch = useDispatch();
@@ -58,7 +60,12 @@ const ExpensePage = () => {
       <h2 className="md:text-2xl text-1xl text-center md:m-4 m-2 md:p-2 p-1 text-white bg-violet-500">Expenses</h2>
       <ExpenseList />
       {premium &&
-        <Leaderboard />
+        <React.Fragment>
+          <DownloadCSV />
+          <Leaderboard />
+          <ExpenseReport />
+        </React.Fragment>
+
       }
     </React.Fragment>
   )

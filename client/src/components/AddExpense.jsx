@@ -7,6 +7,7 @@ const AddExpense = () => {
     const amountRef = useRef();
     const descriptionRef = useRef();
     const categoryRef = useRef();
+    const dateRef = useRef();
 
     const dispatch = useDispatch();
     const premium = useSelector(state => state.premium.premium);
@@ -76,9 +77,11 @@ const AddExpense = () => {
         const amount = amountRef.current.value;
         const description = descriptionRef.current.value;
         const category = categoryRef.current.value;
+        const date = dateRef.current.value;
+
         let data = await fetch('http://localhost:3000/expense/add-expense', {
             method: "POST",
-            body: JSON.stringify({ amount, description, category }),
+            body: JSON.stringify({ amount, description, category, date }),
             headers: {
                 "Content-Type": "application/json",
                 'Authorization': localStorage.getItem('token')
@@ -90,6 +93,7 @@ const AddExpense = () => {
             amountRef.current.value = '';
             descriptionRef.current.value = '';
             categoryRef.current.value = 'Fuel';
+            dateRef.current.value = '';
         } else {
             alert(data.message);
         }
@@ -117,6 +121,11 @@ const AddExpense = () => {
                     <option value="Shopping">Shopping</option>
                     <option value="Other">Other</option>
                 </select>
+            </div>
+            <br />
+            <div>
+                <label htmlFor="date">Date:</label>
+                <input type="date" id="date" className="border border-black rounded mx-2 p-1" ref={dateRef} required/>
             </div>
             <br />
             <button type="submit" className="border-2 md:p-2 p-1 border-blue-500 rounded-lg hover:bg-blue-600 bg-white">Add Expense</button>
