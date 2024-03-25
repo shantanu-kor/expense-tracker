@@ -8,8 +8,8 @@ import Leaderboard from '../components/Leaderboard';
 import { authActions } from '../store/authSlice';
 import { expenseActions } from '../store/expenseSlice';
 import { premiumActions } from '../store/premiumSlice';
-import DownloadCSV from '../components/DownloadCSV';
 import ExpenseReport from '../components/ExpenseReport';
+import DownloadExpense from '../components/DownloadExpense';
 
 const ExpensePage = () => {
   const dispatch = useDispatch();
@@ -61,7 +61,7 @@ const ExpensePage = () => {
       <ExpenseList />
       {premium &&
         <React.Fragment>
-          <DownloadCSV />
+          <DownloadExpense />
           <Leaderboard />
           <ExpenseReport />
         </React.Fragment>
