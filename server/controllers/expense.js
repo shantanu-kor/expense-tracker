@@ -30,7 +30,11 @@ exports.addExpense = async (req, res, next) => {
 
 exports.getExpenses = async (req, res, next) => {
     try {
-        const data = await UserServices.getExpenses(req.user, { raw: true, attributes: ['amount', 'description', 'category', 'date', 'id'] })
+        const page = req.query.page;
+        if (!page) {
+            throw new Error("Page no. not found");
+        }
+        const data = await UserServices.getExpenses(req.user, { raw: true, limit: 10, offset: (page - 1) * 10, attributes: ['amount', 'description', 'category', 'date', 'id'] });
         res.json({
             success: true,
             message: "All your expenses",
@@ -83,3 +87,17 @@ exports.downloadExpenses = async (req, res, next) => {
         })
     }
 };
+
+exports.getMaxPage = async (req, res, next) => {
+    try {
+        const count = await req.user.countExpenses();
+        console.log(count);
+        res.json({ success: true, count })
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({
+            success: false,
+            message: err.message
+        })
+    }
+}

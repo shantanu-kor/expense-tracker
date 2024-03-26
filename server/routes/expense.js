@@ -16,4 +16,6 @@ router.delete('/delete-expense/:id', userAuthentication.authenticate, expenseCon
 
 router.get('/download-expense', userAuthentication.authenticate, premiumMiddleware.isPremiumUser, expenseController.downloadExpenses)
 
+router.get('/max-pages', userAuthentication.authenticate, expenseController.getMaxPage);
+
 module.exports = router;
