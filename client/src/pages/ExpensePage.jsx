@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
 import AddExpense from '../components/AddExpense';
@@ -18,6 +18,9 @@ const ExpensePage = () => {
   const [prevPage, setPrevPage] = useState(null);
   const [currPage, setCurrPage] = useState(1);
   const [nextPage, setNextPage] = useState(null);
+  const [limit, setLimit] = useState(localStorage.getItem('limit') ? localStorage.getItem('limit') : '5');
+
+  const limitRef = useRef();
 
   const premium = useSelector(state => state.premium.premium);
 
@@ -31,15 +34,6 @@ const ExpensePage = () => {
 
   useEffect(() => {
     async function func() {
-      let count = await fetch('http://localhost:3000/expense/max-pages', {
-        headers: {
-          'Authorization': localStorage.getItem('token')
-        }
-      })
-      count = await count.json();
-      if (count.success) {
-        setMaxPage(Math.ceil(count.count / 10));
-      }
       let data = await fetch('http://localhost:3000/user/is-premium', {
         headers: {
           'Authorization': localStorage.getItem('token')
@@ -52,7 +46,24 @@ const ExpensePage = () => {
       }
     }
     func();
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    async function func() {
+      let count = await fetch('http://localhost:3000/expense/max-pages', {
+        headers: {
+          'Authorization': localStorage.getItem('token')
+        }
+      })
+      count = await count.json();
+      if (count.success) {
+        setMaxPage(Math.ceil(count.count / limit));
+      }
+    }
+    func();
+    setPrevPage(null);
+    setCurrPage(1);
+  }, [limit])
 
   useEffect(() => {
     if (maxPage > 1) {
@@ -62,7 +73,7 @@ const ExpensePage = () => {
 
   useEffect(() => {
     const func = async () => {
-      let data = await fetch(`http://localhost:3000/expense/get-expenses/?page=${currPage}`, {
+      let data = await fetch(`http://localhost:3000/expense/get-expenses/?page=${currPage}&limit=${limit}`, {
         headers: {
           'Authorization': localStorage.getItem('token')
         }
@@ -76,7 +87,7 @@ const ExpensePage = () => {
       }
     };
     func();
-  }, [currPage]);
+  }, [currPage, limit]);
 
   const prevHandler = (event) => {
     event.preventDefault();
@@ -111,6 +122,11 @@ const ExpensePage = () => {
     setNextPage(null);
   }
 
+  const limitHandler = () => {
+    setLimit(limitRef.current.value);
+    localStorage.setItem('limit', limitRef.current.value);
+  }
+
   return (
     <React.Fragment>
       <div className="text-right">
@@ -124,6 +140,14 @@ const ExpensePage = () => {
         {currPage && <span className="m-2 p-1 border border-black bg-blue-500">{currPage}</span>}
         {nextPage && <button className="m-2 p-1 border border-black" onClick={nextHandler}>{nextPage}</button>}
         {maxPage !== 1 && <button className="m-2 p-1 border border-black" onClick={lastHandler}>Last Page: {maxPage}</button>}
+        <span className="m-2 p-1">No. of expenses</span>
+        <select className="m-2 p-1 border border-black" ref={limitRef} value={localStorage.getItem('limit') ? localStorage.getItem('limit') : '5'} onChange={limitHandler}>
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
       </div>
       {premium &&
         <React.Fragment>

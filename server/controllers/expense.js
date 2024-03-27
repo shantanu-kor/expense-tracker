@@ -31,10 +31,11 @@ exports.addExpense = async (req, res, next) => {
 exports.getExpenses = async (req, res, next) => {
     try {
         const page = req.query.page;
+        const limit = Number(req.query.limit);
         if (!page) {
             throw new Error("Page no. not found");
         }
-        const data = await UserServices.getExpenses(req.user, { raw: true, limit: 10, offset: (page - 1) * 10, attributes: ['amount', 'description', 'category', 'date', 'id'] });
+        const data = await UserServices.getExpenses(req.user, { raw: true, limit, offset: (page - 1) * limit, attributes: ['amount', 'description', 'category', 'date', 'id'] });
         res.json({
             success: true,
             message: "All your expenses",
