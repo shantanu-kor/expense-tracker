@@ -92,7 +92,6 @@ exports.downloadExpenses = async (req, res, next) => {
 exports.getMaxPage = async (req, res, next) => {
     try {
         const count = await req.user.countExpenses();
-        console.log(count);
         res.json({ success: true, count })
     } catch (err) {
         console.log(err);
