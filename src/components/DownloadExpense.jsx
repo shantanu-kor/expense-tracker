@@ -41,7 +41,8 @@ const DownloadExpense = () => {
         a.click();
         setUrls(data.expenseUrls);
       } else {
-        alert(data.message);
+        alert("Unable to download expenses");
+        // alert(data.message);
       }
     } catch (err) {
       alert("Unable to download expenses");
